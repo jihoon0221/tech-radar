@@ -1,0 +1,22 @@
+# push 하거나 PR 을 열 때마다 GitHub 서버에서 테스트를 자동으로 돌린다.
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]   # 최소 지원 버전 + 서버(Ubuntu 24.04) 버전
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
