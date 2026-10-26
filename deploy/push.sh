@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 맥에서 실행: 테스트 → 코드 전송 → 서버 의존성 갱신.  사용: bash deploy/push.sh
 set -euo pipefail
-HOST="${HOST:-upbit-bot}"
+HOST="${HOST:-radar}"
 APP="tech-radar"
 cd "$(dirname "$0")/.."
 
