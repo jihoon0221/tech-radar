@@ -1,0 +1,14 @@
+[Unit]
+Description=tech-radar 매일 수집 (새로 뜬 저장소 + 스타 추적)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@APP_DIR@
+ExecStart=@APP_DIR@/.venv/bin/python -m techradar
+ExecStartPost=@APP_DIR@/deploy/backup_db.sh
+TimeoutStartSec=30min
+Nice=10
+MemoryMax=300M

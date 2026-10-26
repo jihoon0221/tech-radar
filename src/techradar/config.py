@@ -24,6 +24,7 @@ class Settings:
     github_token: str = ""
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
+    healthcheck_url: str = ""
     db_path: str = "data/techradar.db"
     search_days: int = 7
     min_stars: int = 50
@@ -38,6 +39,7 @@ class Settings:
             github_token=g("GITHUB_TOKEN", ""),
             telegram_bot_token=g("TELEGRAM_BOT_TOKEN", ""),
             telegram_chat_id=g("TELEGRAM_CHAT_ID", ""),
+            healthcheck_url=g("HEALTHCHECK_URL", ""),
             db_path=g("DB_PATH", "data/techradar.db"),
             search_days=int(g("SEARCH_DAYS", "7")),
             min_stars=int(g("MIN_STARS", "50")),

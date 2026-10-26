@@ -1,0 +1,9 @@
+[Unit]
+Description=tech-radar 시드 갱신을 매월 1일 02:00 (KST) 실행
+
+[Timer]
+OnCalendar=*-*-01 02:00:00 Asia/Seoul
+Persistent=true
+
+[Install]
+WantedBy=timers.target

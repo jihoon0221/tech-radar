@@ -1,0 +1,10 @@
+[Unit]
+Description=tech-radar 수집을 매일 03:00 (KST) 실행
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 Asia/Seoul
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target
