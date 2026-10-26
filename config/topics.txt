@@ -1,0 +1,57 @@
+# 시드 토픽 목록: "토픽 [최소 스타]" 한 줄에 하나. 최소 스타를 안 쓰면 1000. '#' 뒤는 주석.
+# 바꾸고 python -m techradar.seed 를 다시 돌리면 된다 (이미 있는 건 건너뜀).
+
+# LLM·AI 앱
+llm
+rag
+ai-agents
+vector-database
+embeddings
+llm-inference
+fine-tuning
+
+# 백엔드
+fastapi
+django
+spring-boot 500
+nestjs
+graphql
+authentication
+orm
+
+# 데이터
+etl
+data-pipeline
+sqlite 500
+postgresql
+web-scraping
+time-series
+
+# 인프라·운영
+docker
+self-hosted
+monitoring
+observability
+ci-cd
+serverless
+
+# 프론트·앱
+react
+nextjs
+react-native
+ui-components
+
+# 봇·자동화
+telegram-bot 500
+automation
+workflow
+trading-bot 300
+
+# 개발 도구 (범용 셋업 추천용)
+cli
+developer-tools
+terminal
+productivity
+linter
+dotfiles
+vpn 500

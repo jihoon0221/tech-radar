@@ -1,0 +1,13 @@
+[project]
+name = "tech-radar"
+version = "0.1.0"
+description = "GitHub 급상승 저장소를 매일 모아 카드로 정리하고 RAG 챗봇으로 묻는 개인 도구"
+requires-python = ">=3.10"
+dependencies = ["httpx>=0.27"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
