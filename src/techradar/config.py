@@ -29,6 +29,7 @@ class Settings:
     search_days: int = 7
     min_stars: int = 50
     search_limit: int = 50
+    min_found: int = 10
     track_days: int = 14
     readme_max_chars: int = 20000
 
@@ -44,6 +45,7 @@ class Settings:
             search_days=int(g("SEARCH_DAYS", "7")),
             min_stars=int(g("MIN_STARS", "50")),
             search_limit=int(g("SEARCH_LIMIT", "50")),
+            min_found=int(g("MIN_FOUND", "10")),
             track_days=int(g("TRACK_DAYS", "14")),
             readme_max_chars=int(g("README_MAX_CHARS", "20000")),
         )

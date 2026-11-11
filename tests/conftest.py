@@ -23,6 +23,8 @@ class FakeGitHub:
         self.repos: dict[str, dict] = {}          # 개별 조회용
         self.missing: set[str] = set()            # 404 로 응답할 저장소
         self.no_readme: set[str] = set()
+        self.broken_readme: set[str] = set()     # 차단 등 한도와 무관한 403
+        self.moved: dict[str, str] = {}          # 이름이 바뀐 저장소: 옛 이름 → 새 이름
         self.readme_calls: list[str] = []
         self.rate_limit_search = False
         self.topic_items: dict[str, list[dict]] = {}   # 시드용 topic: 검색 결과
@@ -49,6 +51,12 @@ class FakeGitHub:
         parts = path.strip("/").split("/")
         if parts[0] == "repos" and len(parts) >= 3:
             name = f"{parts[1]}/{parts[2]}"
+            if name in self.moved:
+                rest = "/".join(parts[3:])
+                new = f"/repos/{self.moved[name]}" + (f"/{rest}" if rest else "")
+                return httpx.Response(301, headers={"location": str(request.url.copy_with(path=new))})
+            if name in self.broken_readme and len(parts) == 4:
+                return httpx.Response(403, json={"message": "Repository access blocked"})
             if name in self.missing:
                 return httpx.Response(404, json={"message": "Not Found"})
             if len(parts) == 4 and parts[3] == "readme":

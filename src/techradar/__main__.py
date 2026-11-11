@@ -26,10 +26,12 @@ def main() -> int:
     c = store.counts()
     print(
         f"[{res.status}] 검색 {res.found}개(신규 {res.new_repos}) · 추적 갱신 {res.tracked}개 · "
-        f"README {res.readmes}개 | DB 총 저장소 {c['repos']} · 스냅샷 {c['snapshots']}"
+        f"README {res.readmes}개 · 개별 실패 {len(res.failures)}건 | DB 총 저장소 {c['repos']} · 스냅샷 {c['snapshots']}"
     )
     if res.message:
         print(res.message, file=sys.stderr)
+    for f in res.failures[:10]:
+        print(f"  실패: {f}", file=sys.stderr)
     ping_healthcheck(s.healthcheck_url, ok=res.status != "error")
     store.close()
     return 1 if res.status == "error" else 0

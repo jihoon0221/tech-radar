@@ -119,6 +119,27 @@ class Store:
         self.db.commit()
         return exists is None
 
+    def rename_repo(self, old: str, new: str) -> None:
+        """GitHub 에서 이름이 바뀐 저장소의 기록을 새 이름으로 옮긴다 (스냅샷·README 포함).
+
+        새 이름이 이미 있으면(검색에서 새 이름으로 먼저 잡힌 경우) 겹치지 않는 기록만 합친다.
+        """
+        if old == new:
+            return
+        if self.db.execute("SELECT 1 FROM repos WHERE full_name=?", (new,)).fetchone():
+            self.db.execute(
+                "INSERT OR IGNORE INTO star_snapshots (full_name, date, stars) "
+                "SELECT ?, date, stars FROM star_snapshots WHERE full_name=?", (new, old))
+            self.db.execute(
+                "INSERT OR IGNORE INTO readmes (full_name, content, fetched_at) "
+                "SELECT ?, content, fetched_at FROM readmes WHERE full_name=?", (new, old))
+            for t in ("star_snapshots", "readmes", "repos"):
+                self.db.execute(f"DELETE FROM {t} WHERE full_name=?", (old,))
+        else:
+            for t in ("repos", "star_snapshots", "readmes"):
+                self.db.execute(f"UPDATE {t} SET full_name=? WHERE full_name=?", (new, old))
+        self.db.commit()
+
     def add_snapshot(self, full_name: str, day: date, stars: int) -> None:
         self.db.execute(
             "INSERT OR REPLACE INTO star_snapshots (full_name, date, stars) VALUES (?, ?, ?)",

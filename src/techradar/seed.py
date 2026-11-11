@@ -50,6 +50,7 @@ class SeedResult:
     per_topic: dict[str, int] = field(default_factory=dict)
     new_repos: int = 0
     readmes: int = 0
+    failures: list[str] = field(default_factory=list)
     message: str = ""
 
 
@@ -87,7 +88,13 @@ def seed(
         if pending:
             progress(f"README {len(pending)}개 받는 중 (중간에 멈춰도 다시 실행하면 이어서 받아요)")
         for j, name in enumerate(pending, 1):
-            text = client.get_readme(name, readme_max_chars)
+            try:
+                text = client.get_readme(name, readme_max_chars)
+            except RateLimited:
+                raise
+            except GitHubError as e:
+                res.failures.append(f"{name}: {e}")
+                continue
             store.save_readme(name, text or "")
             res.readmes += 1
             if j % 50 == 0 or j == len(pending):
@@ -127,6 +134,8 @@ def main(argv: list[str] | None = None) -> int:
     for name, n in sorted(res.per_topic.items(), key=lambda kv: kv[1]):
         flag = "  ← 0개: 토픽 이름 확인" if n == 0 else ""
         print(f"  {name:<{width}} {n:>3}{flag}")
+    if res.failures:
+        print(f"README 실패 {len(res.failures)}건 (다음 실행 때 다시 시도):", *res.failures[:5], sep="\n  ")
     c = store.counts()
     print(
         f"[{res.status}] 신규 {res.new_repos}개 · README {res.readmes}개 | "

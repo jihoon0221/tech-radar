@@ -8,7 +8,8 @@ Type=oneshot
 User=@USER@
 WorkingDirectory=@APP_DIR@
 ExecStart=@APP_DIR@/.venv/bin/python -m techradar
-ExecStartPost=@APP_DIR@/deploy/backup_db.sh
+# 수집이 실패해도 백업은 한다 (ExecStartPost 는 성공했을 때만 돌아서 10/28~11/8 백업이 빠졌음)
+ExecStopPost=@APP_DIR@/deploy/backup_db.sh
 TimeoutStartSec=30min
 Nice=10
 MemoryMax=300M

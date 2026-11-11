@@ -68,6 +68,7 @@ class GitHubClient:
         self._http = httpx.Client(
             base_url=base_url, headers=headers, transport=transport,
             timeout=httpx.Timeout(20.0, connect=10.0),
+            follow_redirects=True,  # 이름이 바뀌거나 옮겨진 저장소는 301 로 응답한다
         )
         self._retries = retries
         self._sleep = sleep

@@ -98,3 +98,15 @@ def test_old_db_without_new_columns_is_migrated(tmp_path):
     s = Store(path)
     s.upsert_repo(parse_repo(repo("a/a", 1)), D1, source="seed", seed_topic="llm")
     assert s.counts()["seeds"] == 1
+
+
+def test_rename_repo_merges_when_new_name_already_exists():
+    s = Store(":memory:")
+    s.upsert_repo(parse_repo(repo("old/x", 10)), D1)
+    s.add_snapshot("old/x", D1, 10)
+    s.upsert_repo(parse_repo(repo("new/x", 12)), D2)
+    s.add_snapshot("new/x", D2, 12)
+    s.rename_repo("old/x", "new/x")
+    assert s.counts()["repos"] == 1
+    rows = s.db.execute("SELECT full_name, date FROM star_snapshots ORDER BY date").fetchall()
+    assert [tuple(r) for r in rows] == [("new/x", D1.isoformat()), ("new/x", D2.isoformat())]
